@@ -9,8 +9,8 @@
 ## Install and Running POET IC Solver:
 
 ### Installing the required packages:
-* <span style="background-color: #a5e8f2">pip install -r requirements.txt</span>
-* <span style="background-color: #e6f5f7">pip install tensorflow-probability</span>
+* > pip install -r requirements.txt
+* > pip install tensorflow-probability
 
 ### Running POET IC Solver:
-<span style="background-color: #e6f5f7">python run.py</span>
+* >python run.py
