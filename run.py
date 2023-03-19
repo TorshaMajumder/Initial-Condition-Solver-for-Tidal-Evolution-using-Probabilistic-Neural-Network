@@ -19,6 +19,6 @@ if __name__ == '__main__':
             "path_to_store": path,
             "version": version
             }
-    poet = POET_IC_Solver(**params)
+    poet = poet_solver.POET_IC_Solver(**params)
     poet.store_data(X_train=X_train, y_train=y_train)
     poet.fit_evaluate(X_test=X_test)

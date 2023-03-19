@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import tensorflow_probability as tfp
+from POET.solver import poet_logging
 
 #
 # Set all the parameters
@@ -49,6 +50,10 @@ class POET_IC_Solver(object):
         self.y_hat = None
         self.y_sd = None
         self.retrain = retrain
+        #
+        # start logging the output
+        #
+        poet_logging.start(path=self.path)
         #
         # Check if '/self.path/' file or directory exist
         #
@@ -294,6 +299,11 @@ class POET_IC_Solver(object):
                     #
                     opt = tf.keras.optimizers.Adam(learning_rate=0.0003)
                     #
+                    # Store the training loss for each epoch
+                    #
+                    csv_logger = tf.keras.callbacks.CSVLogger(f"/{self.path}/poet_output/"
+                                                              f"{self.type}_{self.version}/model_training_log.csv")
+                    #
                     # build the model using a independent normal distribution
                     #
                     self.model = tf.keras.Sequential([
@@ -304,7 +314,8 @@ class POET_IC_Solver(object):
                     self.model.fit(X_train, y_train,
                                    epochs=self.epochs,
                                    batch_size=self.batch_size,
-                                   verbose=self.verbose)
+                                   verbose=self.verbose,
+                                   callbacks=[csv_logger])
                     #
                     # Save the model (model.h5) under the folder - {self.path}/poet_output/{self.type}_{self.version}/
                     #
@@ -421,6 +432,11 @@ class POET_IC_Solver(object):
 
         except Exception as e:
             print(f"\nException Raised: {e}\n")
+
+        #
+        # End of logging
+        #
+        poet_logging.stop()
 
 
 if __name__ == '__main__':
