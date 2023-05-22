@@ -17,7 +17,8 @@ if __name__ == '__main__':
             "retrain": False,
             "threshold": 2000,
             "path_to_store": path,
-            "version": version
+            "version": version,
+            "features": [True, True, True, True, True, True]
             }
     poet = poet_solver.POET_IC_Solver(**params)
     poet.store_data(X_train=X_train, y_train=y_train)

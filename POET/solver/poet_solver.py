@@ -34,11 +34,14 @@ class POET_IC_Solver(object):
         minimum number of training data samples
     verbose: int (default =2)
         'auto', 0, 1, or 2. Verbosity mode. 0 = silent, 1 = progress bar, 2 = one line per epoch.
-
+    version: string
+        version of the "type" data used to train the NN model
+    features: list of booleans (default = "all features")
+        list of booleans for each features used to train the NN model
     """
 
     def __init__(self, type=None, path_to_store=None, epochs=500, batch_size=100,
-                 verbose=2, threshold=1000, version=None,retrain=False):
+                 verbose=2, threshold=1000, version=None, retrain=False, features=None):
         self.epochs = epochs
         self.verbose = verbose
         self.type = type
@@ -50,6 +53,7 @@ class POET_IC_Solver(object):
         self.y_hat = None
         self.y_sd = None
         self.retrain = retrain
+        self.features = features
         #
         # start logging the output
         #
@@ -212,6 +216,11 @@ class POET_IC_Solver(object):
                                   compression='gzip')
             labels_df = pd.read_csv(f"/{self.path}/poet_output/{self.type}_{self.version}/datasets/label.csv.gz",
                                     compression='gzip')
+            #
+            # Train using specified list of features
+            #
+            if self.features:
+                data_df = data_df.loc[:, self.features]
             #
             # Convert pandas dataframe to numpy ndarray
             #
@@ -452,7 +461,8 @@ if __name__ == '__main__':
         "retrain": False,
         "threshold": 2000,
         "path_to_store": path,
-        "version": version
+        "version": version,
+        "features": [True, True, True, True, True, True]
     }
     poet = POET_IC_Solver(**params)
     poet.store_data(X_train=X_train, y_train=y_train)
